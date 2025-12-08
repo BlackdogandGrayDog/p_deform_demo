@@ -50,6 +50,7 @@ parser.add_argument("--eval_dataset_name", type=str, default="hamlyn", help="Dat
 parser.add_argument("--eval_traj_num", type=str, help="Evaluation trajectory number.")
 parser.add_argument("--eval_gs", type=str, help="Grid size for evaluation.")
 parser.add_argument("--step_size", type=int, default=10, help="Step size for evaluation.")
+parser.add_argument("--training_steps", type=str, default="150k", help="Number of training steps.")
 args = parser.parse_args()
 
 # ========== Directory Configuration ==========
@@ -156,11 +157,28 @@ def learner(model):
             print('Using patched loss function')
         
         global_step = tf.train.create_global_step()
-        lr = tf.train.exponential_decay(learning_rate=1e-4,
+        
+        initial_lr = 5e-5
+        min_lr = 1e-6
+        decay_steps = int(15e4)
+        decay_rate = (min_lr / initial_lr)
+
+        
+        # lr = tf.maximum(min_lr, tf.train.exponential_decay(
+        #     learning_rate=initial_lr,
+        #     global_step=global_step,
+        #     decay_steps=1,
+        #     decay_rate=decay_rate
+        # ))
+              
+        lr_tensor = tf.maximum(min_lr, tf.train.exponential_decay(
+                                        learning_rate=initial_lr,
                                         global_step=global_step,
-                                        decay_steps=int(5e6),
-                                        decay_rate=0.1) + 1e-6
-        optimizer = tf.train.AdamOptimizer(learning_rate=lr)
+                                        decay_steps=decay_steps,
+                                        decay_rate=decay_rate,
+                                        staircase=False))
+        
+        optimizer = tf.train.AdamOptimizer(learning_rate=lr_tensor)
         train_op = optimizer.minimize(loss_op, global_step=global_step)
 
         # Adjust training operation for warm-up
@@ -175,10 +193,10 @@ def learner(model):
             save_checkpoint_secs=10) as sess:
 
             while not sess.should_stop():
-                _, step, train_loss = sess.run([train_op, global_step, loss_op])
+                _, step, train_loss, lr_value = sess.run([train_op, global_step, loss_op, lr_tensor])
 
                 if step % 10 == 0:
-                    print(f"Step {step}: Train Loss {train_loss:.6f}")
+                    print(f"Step {step}: Train Loss {train_loss:.6f}, Learning Rate {lr_value:.6e}")
                     steps.append(step)
                     train_losses.append(train_loss)  # Append training loss for the plot
 
