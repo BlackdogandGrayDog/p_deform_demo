@@ -159,7 +159,7 @@ def learner(model):
         global_step = tf.train.create_global_step()
         
         initial_lr = 5e-5
-        min_lr = 5e-6
+        min_lr = 8e-6
         decay_steps = int(15e4)
         decay_rate = (min_lr / initial_lr)
 
