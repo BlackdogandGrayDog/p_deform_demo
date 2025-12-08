@@ -6,7 +6,7 @@ import signal
 # Define training parameter combinations
 trajectories = ['5']
 loss_models = ['patched_0.005_0.01']
-steps = ['150k']
+steps = ['300k']
 
 dataset_name = "hamlyn"
 finetune_dataset_name = dataset_name
