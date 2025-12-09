@@ -42,7 +42,7 @@ parser.add_argument("--mode", type=str, required=True, choices=["train", "eval"]
 parser.add_argument("--model", type=str, default="cloth", choices=["cfd", "cloth"], help="Select model to run. (Default: cloth)")
 parser.add_argument("--dataset_name", type=str, default="simulator", required=True, help="Dataset to use.")
 parser.add_argument("--trajectory", type=str, required=True, help="Trajectory to evaluate.")
-parser.add_argument("--finetune_dataset_name", type=str, default=None, choices=["hamlyn", "simulator", "simulator_noise", "simulator_noise_eval"], help="Dataset to use.")
+parser.add_argument("--finetune_dataset_name", type=str, default=None, choices=["hamlyn", "simulator", "simulator_noise", "simulator_noise_eval", "surgt"], help="Dataset to use.")
 parser.add_argument("--finetune_trajectory", type=str, default=None, help="Trajectory to evaluate.")
 parser.add_argument("--loss_model", type=str, required=True, help="Loss model type (e.g., orig, patched_xxx, simulator_and_hamlyn).")
 parser.add_argument("--steps", type=str, required=True, help="Number of training steps (e.g., 56k, 130k).")
@@ -158,9 +158,9 @@ def learner(model):
         
         global_step = tf.train.create_global_step()
         
-        initial_lr = 1e-5
-        min_lr = 1e-6
-        decay_steps = int(10e4)
+        initial_lr = 3e-5
+        min_lr = 7e-7
+        decay_steps = int(25e4)
         decay_rate = (min_lr / initial_lr)
 
         

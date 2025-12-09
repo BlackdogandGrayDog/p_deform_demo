@@ -292,6 +292,17 @@ class Model(snt.AbstractModule):
         else:
           image_pos_pred = tf.matmul(common.K_hamlyn_4, tf.transpose(pred_position_homo[:, :3], perm=[1, 0]))
         img_size = common.hamlyn_img_size
+      
+      elif "surgt" in (self.dataset_name or "") or "surgt" in (self.finetune_dataset_name or ""):
+        if str(self.finetune_traj_num).startswith("6") or str(self.finetune_traj_num).startswith("7"):
+          image_pos_pred = tf.matmul(common.K_surgt_6, tf.transpose(pred_position_homo[:, :3], perm=[1, 0]))
+        elif str(self.finetune_traj_num).startswith("9"):
+          image_pos_pred = tf.matmul(common.K_surgt_9, tf.transpose(pred_position_homo[:, :3], perm=[1, 0]))
+        elif str(self.finetune_traj_num).startswith("1"):
+          image_pos_pred = tf.matmul(common.K_surgt_1, tf.transpose(pred_position_homo[:, :3], perm=[1, 0]))
+        else:
+          raise ValueError(f"Invalid trajectory number: {self.finetune_traj_num}")
+        img_size = common.surgt_img_size
       else:
         image_pos_pred = tf.matmul(common.K_simulator, tf.transpose(pred_position_homo[:, :3], perm=[1, 0]))
         img_size = common.simulator_img_size
