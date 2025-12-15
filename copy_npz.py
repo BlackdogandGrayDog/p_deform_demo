@@ -34,7 +34,7 @@ def process_trajectory(traj_id):
 
 
 # ==== USAGE ====
-for traj_num in range(5000, 5002): # trj 11 train sequences, change to 12 if needed
+for traj_num in range(5000, 5023): # trj 11 train sequences, change to 12 if needed
     source_folder = f"./hamlyn_data/trajectory_{traj_num}/"
     destination_folder = f"./input/hamlyn/trajectory_5_accel_patched_input" # change to 12 if needed
     # destination_folder = f"./input/hamlyn/trajectory_12_accel_patched_input_eval" 

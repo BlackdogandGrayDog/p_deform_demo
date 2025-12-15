@@ -4,13 +4,13 @@ import signal
 # Define the mode
 
 # Define training parameter combinations
-trajectories = ['7']
+trajectories = ['5']
 loss_models = ['patched_0.005_0.01']
 steps = ['300k']
 
-dataset_name = "surgt"
+dataset_name = "hamlyn"
 finetune_dataset_name = dataset_name
-finetune_trajectory = "7"
+finetune_trajectory = "5"
 
 # Iterate over all parameter combinations
 for trajectory in trajectories:
